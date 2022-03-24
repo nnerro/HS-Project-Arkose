@@ -1,0 +1,8 @@
+{
+"Ranks": {
+    userId(int):"<Creator, Owner, Admin, Mod>"(str), ...
+    },
+"Banlist": {
+    userId(int):"<Reason>"(str), ...
+    }    
+}

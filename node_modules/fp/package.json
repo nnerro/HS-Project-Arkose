@@ -1,0 +1,33 @@
+{
+  "name": "fp",
+  "version": "0.1.0",
+  "description": "fun with functional programming",
+  "main": "lib/fp.js",
+  "scripts": {
+    "test": "grunt test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NickHeiner/fp"
+  },
+  "keywords": [
+    "functional",
+    "programming"
+  ],
+  "author": "Nick Heiner",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/NickHeiner/fp/issues"
+  },
+  "devDependencies": {
+    "grunt-mocha-test": "~0.7.0",
+    "grunt-contrib-jshint": "~0.7.1",
+    "grunt": "~0.4.1",
+    "chai": "~1.8.1",
+    "sinon-chai": "~2.4.0",
+    "sinon": "~1.7.3"
+  },
+  "dependencies": {
+    "lodash": "~2.2.1"
+  }
+}
