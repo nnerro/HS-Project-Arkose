@@ -7,6 +7,7 @@ const express = require("express");
 const app = express();
 
 const fp = require("fp");
+const fs = require("fs");
 const fun = require("./api");
 const phin = require("phin");
 const readline = require("readline");
@@ -18,16 +19,6 @@ const rl = readline.createInterface({
 app.get("/", async (req, res) => {
   let username = 'HS_' + require("crypto").randomBytes(8).toString("hex");
   let password = require("crypto").randomBytes(10).toString("hex")
-  if (password == undefined){
-    setTimeout(() => {
-      while (true){
-        password = require("crypto").randomBytes(10).toString("hex")
-        if (password != undefined){
-          break
-        }
-      }
-    }, 100)
-  }
   await genUsername(username, password).then(async validName => {
     let username = validName
     await solveCaptcha(username, password).then(async data => {
@@ -43,12 +34,22 @@ app.get("/", async (req, res) => {
   })
 });
 app.use(express.urlencoded({ extended: true }));
-app.post("/", (req, res) => {
+/*app.post("/", (req, res) => {
   signUp(req.body.csrf, req.body.id, req.body.token, req.body.username, req.body.password).then(success => {
     res.send(`<h1>Username: ${req.body.username}<br>Password: ${req.body.password}</h1><br><p>${success}</p><form action="/" method="GET"><input type="submit" value="Restart"></form>`);
   }).catch(err => {
     res.send(`<h1>${err}</h1><br><form action="/" method="GET"><input type="submit" value="Restart"></form>`)
   })
+});*/
+app.post("/", async(req, res) => {
+  signUp(req.body.csrf, req.body.id, req.body.token, req.body.username, req.body.password).then(cookie => {
+    res.redirect("/")
+    fs.appendFile('cookies.txt', `${cookie}\n`, function (err) {
+      if (err) throw err;
+    });
+  }).catch(err => {
+    res.send(`<h1>${err}</h1><br><form action="/" method="GET"><input type="submit" value="Restart"></form>`)
+  });
 });
 app.listen(process.env.PORT || 3000);
 
@@ -160,8 +161,8 @@ async function signUp(csrf, id, token, username, password) {
     if (JSON.parse(response.body.toString()).hasOwnProperty("errors")){
       reject("Please solve the captcha first!");
     } else {
-      console.log(JSON.parse(response.body.toString()));
-      resolve(response.body.toString());
+      var roblosecurity = response.headers["set-cookie"].toString().split("=")[6].split(";")[0];
+      resolve(roblosecurity);
     }
   })
 };
